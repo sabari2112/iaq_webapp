@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iaq.ai - Indoor Air Quality Prediction</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(90deg, #0A0F11 0%, #173948 100%);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 2rem;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .main-container {
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            padding: 2rem;
+            padding-top: 1rem;
+            gap: 4rem;
+        }
+
+        .left-section {
+            flex: 1;
+            max-width: 600px;
+            padding-left: 5rem;
+            padding-bottom: 3rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(45deg, #00d4aa, #00b894);
+            border-radius: 8px;
+            margin-right: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .headline {
+            font-size: 3.5rem;
+            font-weight: 550;
+            line-height: 1.2;
+            margin-bottom: 2rem;
+            
+        }
+
+        .highlight {
+            color: #00d4aa;
+        }
+
+        .description {
+            font-size: 1.2rem;
+            color: #a0b4c7;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+        }
+
+        .learn-more-btn {
+            background: transparent;
+            border: 2px solid #4a5568;
+            color: #a0b4c7;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .learn-more-btn:hover {
+            border-color: #00d4aa;
+            color: #00d4aa;
+        }
+
+        .right-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 500px;margin-left: 10%;
+        }
+
+        .upload-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .upload-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .upload-icon {
+            width: 40px;
+            height: 40px;
+            background: #00d4aa;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .upload-icon i {
+            color: rgb(0, 0, 0);
+            font-size: 20px;
+        }
+
+        .upload-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .upload-subtitle {
+            color: #a0b4c7;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .upload-area {
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #00d4aa;
+            background: rgba(0, 212, 170, 0.05);
+        }
+
+        .csv-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(0, 212, 170, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 24px;
+        }
+
+        .csv-icon i {
+            color: #00d4aa;
+            font-size: 28px;
+        }
+
+        .upload-text {
+            color: #a0b4c7;
+            margin-bottom: 1rem;
+        }
+
+        .upload-btn {
+            background: #00d4aa;
+            color: rgb(0, 0, 0);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            background: #00b894;
+            transform: translateY(-1px);
+        }
+
+        .hidden-input {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+
+            .main-container {
+                flex-direction: column;
+                padding: 1rem;
+                padding-top: 5rem;
+                gap: 2rem;
+            }
+
+            .left-section {
+                padding-left: 0;
+                text-align: center;
+            }
+
+            .headline {
+                font-size: 2.5rem;
+                margin-top: 5%;
+            }
+
+            .upload-card {
+                padding: 2rem;
+            }
+            .right-section{
+              margin-left: 0%;
+
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo" onclick="window.location.href='/'" style="cursor: pointer;">
+            <div class="logo-icon">
+                <i class="fas fa-wind"></i>
+            </div>
+            iaq.ai
+        </div>
+    </header>
+    
+    <div class="main-container">
+        <div class="left-section">
+            
+            <h1 class="headline">
+                Predict <span class="highlight">Indoor Air Quality</span> with AI Precision
+            </h1>
+            
+            <p class="description">
+                Our AI-powered model analyzes <span class="highlight">indoor air quality</span> and predict future trends by uploading your CSV data.
+            </p>
+            
+            <button class="learn-more-btn" onclick="window.location.href='/learnmore'">Learn more</button>
+        </div>
+        
+        <div class="right-section">
+            <div class="upload-card">
+                <div class="upload-header">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div>
+                        <div class="upload-title">Analyze Your Data</div>
+                        <div class="upload-subtitle">Upload CSV file to get started</div>
+                    </div>
+                </div>
+                
+                <form method="POST" action="/upload" enctype="multipart/form-data" id="uploadForm">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="csv-icon">
+                            <i class="fas fa-file-csv"></i>
+                        </div>
+                        <div class="upload-text" id="uploadText">Drag and drop your csv file here</div>
+                        <div class="selected-file" id="selectedFile" style="display: none; color: #00d4aa; margin-bottom: 1rem; text-align: center;">
+                            <i class="fas fa-file-csv" style="margin-right: 0.5rem;"></i>
+                            <span id="fileName"></span>
+                            <button type="button" class="change-file-btn" onclick="event.stopPropagation(); selectFile();" style="margin-left: 1rem; background: transparent; border: 1px solid #4a5568; color: #a0b4c7; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">Change</button>
+                        </div>
+
+                        <button type="button" class="action-btn" id="actionBtn" onclick="event.stopPropagation(); handleActionClick();" style="background: #00d4aa; color: rgb(0, 0, 0); border: none; padding: 0.75rem 2rem; border-radius: 8px; font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; width: 200px; height: 50px; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                            <i class="fas fa-cloud-upload-alt" style="margin-right: 0.5rem;"></i>
+                            <span id="actionText">Select CSV file</span>
+                        </button>
+                    </div>
+                    <input type="file" id="csvFile" name="csvFile" accept=".csv" class="hidden-input" onchange="handleFileSelect(this)">
+                </form>
+                
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Dialog for Parameter Warning -->
+    <div class="modal-overlay" id="parameterWarning" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 9999; backdrop-filter: blur(5px);">
+        <div class="modal-container" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #1a2332 0%, #2d3748 100%); border-radius: 16px; padding: 2rem; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 193, 7, 0.3);">
+            <div class="modal-header" style="text-align: center; margin-bottom: 1.5rem;">
+                <div style="width: 60px; height: 60px; background: rgba(255, 193, 7, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                    <i class="fas fa-exclamation-triangle" style="color: #ffc107; font-size: 24px;"></i>
+                </div>
+                <h3 style="color: #ffc107; font-size: 1.3rem; font-weight: 600; margin: 0;">Required Parameters</h3>
+            </div>
+            <div class="modal-body" style="text-align: center; margin-bottom: 2rem;">
+                <p style="color: #e2e8f0; font-size: 1rem; line-height: 1.6; margin-bottom: 1rem;">Make sure your dataset contains the minimum required parameters properly labeled:</p>
+                <div style="background: rgba(0, 212, 170, 0.1); border: 1px solid #00d4aa; border-radius: 8px; padding: 1rem; margin: 1rem 0;">
+                    <div style="color: #00d4aa; font-weight: 600; font-size: 1.1rem;">
+                        PM2.5 • PM10 • CO • TEMPERATURE • HUMIDITY
+                    </div>
+                </div>
+                <p style="color: #a0b4c7; font-size: 0.9rem; line-height: 1.4;">These parameters are essential for accurate air quality predictions.</p>
+            </div>
+            <div class="modal-actions" style="display: flex; gap: 1rem; justify-content: center;">
+                <button onclick="closeParameterWarning()" style="background: #00d4aa; color: #000; border: none; padding: 0.75rem 2rem; border-radius: 8px; font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease;">
+                    <i class="fas fa-check" style="margin-right: 0.5rem;"></i>
+                    Got it!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isFileSelected = false;
+        
+        function selectFile() {
+            document.getElementById('csvFile').click();
+        }
+        
+        function handleActionClick() {
+            if (isFileSelected) {
+                // Submit the form for prediction
+                document.getElementById('uploadForm').submit();
+            } else {
+                // Open file selector
+                selectFile();
+            }
+        }
+        
+        function handleFileSelect(input) {
+            console.log('🚀 File selection triggered');
+            console.log('Input element:', input);
+            console.log('Input files:', input.files);
+            
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const fileName = file.name;
+                const fileType = file.type;
+                const fileSize = file.size;
+                
+                console.log(`📁 File selected: ${fileName}`);
+                console.log(`📄 File type: ${fileType}`);
+                console.log(`📊 File size: ${fileSize} bytes`);
+                
+                // Check if it's a CSV file
+                if (!fileName.toLowerCase().endsWith('.csv') && fileType !== 'text/csv' && fileType !== 'application/vnd.ms-excel') {
+                    console.error('❌ Invalid file type:', fileType);
+                    alert('Please select a CSV file!');
+                    input.value = ''; // Clear the input
+                    return;
+                }
+                
+                console.log('✅ File validation passed');
+                
+                // Update UI to show selected file
+                const uploadText = document.getElementById('uploadText');
+                const selectedFile = document.getElementById('selectedFile');
+                const parameterWarning = document.getElementById('parameterWarning');
+                const fileName_span = document.getElementById('fileName');
+                const actionBtn = document.getElementById('actionBtn');
+                const actionText = document.getElementById('actionText');
+                const actionIcon = actionBtn.querySelector('i');
+                
+                // Hide initial upload text
+                uploadText.style.display = 'none';
+                
+                // Show selected file info
+                fileName_span.textContent = fileName;
+                selectedFile.style.display = 'block';
+                
+                // Show parameter warning modal
+                parameterWarning.style.display = 'block';
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+                
+                // Update button to predict mode
+                actionIcon.className = 'fas fa-brain';
+                actionText.textContent = 'Predict';
+                isFileSelected = true;
+                
+                console.log('📋 File ready for prediction. User can now click "Predict" button.');
+            } else {
+                console.log('❌ No file selected or input.files is empty');
+                resetUploadUI();
+            }
+        }
+        
+        function resetUploadUI() {
+            const uploadText = document.getElementById('uploadText');
+            const selectedFile = document.getElementById('selectedFile');
+            const parameterWarning = document.getElementById('parameterWarning');
+            const actionBtn = document.getElementById('actionBtn');
+            const actionText = document.getElementById('actionText');
+            const actionIcon = actionBtn.querySelector('i');
+            
+            // Show initial state
+            uploadText.style.display = 'block';
+            
+            // Hide selected file state
+            selectedFile.style.display = 'none';
+            
+            // Hide parameter warning modal
+            parameterWarning.style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restore scrolling
+            
+            // Reset button to select mode
+            actionIcon.className = 'fas fa-cloud-upload-alt';
+            actionText.textContent = 'Select CSV file';
+            isFileSelected = false;
+            
+            // Clear file input
+            document.getElementById('csvFile').value = '';
+        }
+        
+        function closeParameterWarning() {
+            const parameterWarning = document.getElementById('parameterWarning');
+            parameterWarning.style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        // Handle drag and drop
+        const uploadArea = document.getElementById('uploadArea');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            if (!isFileSelected) {
+                uploadArea.style.borderColor = '#00d4aa';
+                uploadArea.style.background = 'rgba(0, 212, 170, 0.05)';
+            }
+        });
+        
+        uploadArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+            uploadArea.style.background = 'transparent';
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+            uploadArea.style.background = 'transparent';
+            
+            // Only allow drop if no file is selected yet
+            if (!isFileSelected) {
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const file = files[0];
+                    // Check if it's a CSV file
+                    if (file.name.toLowerCase().endsWith('.csv') || file.type === 'text/csv' || file.type === 'application/vnd.ms-excel') {
+                        document.getElementById('csvFile').files = files;
+                        handleFileSelect(document.getElementById('csvFile'));
+                    } else {
+                        alert('Please drop a CSV file!');
+                    }
+                }
+            }
+        });
+        
+        // Add form submission handler
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            console.log('📤 Form submission started...');
+            const actionBtn = document.getElementById('actionBtn');
+            const actionText = document.getElementById('actionText');
+            const actionIcon = actionBtn.querySelector('i');
+            
+            // Show loading state
+            actionIcon.className = 'fas fa-spinner fa-spin';
+            actionText.textContent = 'Analyzing...';
+            actionBtn.disabled = true;
+        });
+    </script>
+</body>
+</html>

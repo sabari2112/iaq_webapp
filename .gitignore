@@ -1,0 +1,34 @@
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Virtual environments
+.env/
+venv/
+
+# Large data / model files (optional — keep if you want them in repo)
+*.h5
+*.pkl
+*.joblib
+*.csv
+*.npy
+*.npz
+
+# Logs and temp files
+*.log
+*.tmp
+
+# Training scripts (we don't deploy training code)
+train_lstm_minimal.py
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# IDE-specific folders
+.vscode/
+.idea/

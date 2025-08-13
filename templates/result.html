@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iaq.ai - Prediction Results</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(90deg, #0A0F11 0%, #173948 100%);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 2rem;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(45deg, #00d4aa, #00b894);
+            border-radius: 8px;
+            margin-right: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .main-container {
+            padding: 6rem 2rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .highlight {
+            color: #00d4aa;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: #a0b4c7;
+            margin-bottom: 2rem;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .summary-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .summary-card h3 {
+            font-size: 0.9rem;
+            color: #a0b4c7;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00d4aa;
+        }
+
+        .results-table-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .table-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .table-icon {
+            width: 40px;
+            height: 40px;
+            background: #00d4aa;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .table-icon i {
+            color: black;
+            font-size: 20px;
+        }
+
+        .table-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            table-layout: fixed;
+        }
+
+        .results-table th,
+        .results-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Column width specifications */
+        .results-table th:nth-child(1), .results-table td:nth-child(1) { width: 8%; }  /* Day */
+        .results-table th:nth-child(2), .results-table td:nth-child(2) { width: 15%; } /* Date */
+        .results-table th:nth-child(3), .results-table td:nth-child(3) { width: 12%; } /* IAQI Value */
+        .results-table th:nth-child(4), .results-table td:nth-child(4) { width: 18%; } /* Category */
+        .results-table th:nth-child(5), .results-table td:nth-child(5) { width: 15%; } /* Range */
+        .results-table th:nth-child(6), .results-table td:nth-child(6) { width: 32%; } /* Health Impact */
+
+        .results-table th {
+            background: rgba(0, 212, 170, 0.1);
+            font-weight: 600;
+            color: #00d4aa;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+
+        .results-table td {
+            font-size: 0.95rem;
+        }
+
+        .category-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .category-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .badge-good { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+        .badge-satisfactory { background: rgba(234, 179, 8, 0.2); color: #eab308; }
+        .badge-moderate { background: rgba(249, 115, 22, 0.2); color: #f97316; }
+        .badge-poor { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .badge-very-poor { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+        .badge-severe { background: rgba(120, 53, 15, 0.2); color: #78350f; }
+
+        .iaqi-value {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #00d4aa;
+            color: black;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #00b894;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #a0b4c7;
+            border: 2px solid #4a5568;
+        }
+
+        .btn-secondary:hover {
+            border-color: #00d4aa;
+            color: #00d4aa;
+        }
+
+        .flash-messages {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 1001;
+        }
+
+        .flash-message {
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+
+            .main-container {
+                padding: 5rem 1rem 2rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .summary-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .results-table-container {
+                padding: 1rem;
+                overflow-x: auto;
+            }
+
+            .results-table {
+                min-width: 600px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo" onclick="window.location.href='/'" style="cursor: pointer;">
+            <div class="logo-icon">
+                <i class="fas fa-wind"></i>
+            </div>
+            iaq.ai
+        </div>
+    </header>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                    <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="main-container">
+        <div class="page-header">
+            <h1 class="page-title">
+                <span class="highlight">Air Quality</span> Predictions
+            </h1>
+            <p class="page-subtitle">
+                7-day IAQI forecast based on your uploaded data: <strong>{{ summary.filename }}</strong>
+            </p>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="summary-cards">
+            <div class="summary-card">
+                <h3>Average IAQI</h3>
+                <div class="value">{{ summary.average }}</div>
+            </div>
+            <div class="summary-card">
+                <h3>Minimum IAQI</h3>
+                <div class="value">{{ summary.min }}</div>
+            </div>
+            <div class="summary-card">
+                <h3>Maximum IAQI</h3>
+                <div class="value">{{ summary.max }}</div>
+            </div>
+            <div class="summary-card">
+                <h3>Forecast Days</h3>
+                <div class="value">7</div>
+            </div>
+        </div>
+
+        <!-- Results Table -->
+        <div class="results-table-container">
+            <div class="table-header">
+                <div class="table-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div>
+                    <div class="table-title">Detailed Predictions</div>
+                </div>
+            </div>
+
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Day</th>
+                        <th>Date</th>
+                        <th>IAQI Value</th>
+                        <th>Category</th>
+                        <th>Range</th>
+                        <th>Health Impact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                    <tr>
+                        <td>{{ result.day }}</td>
+                        <td>{{ result.date }}</td>
+                        <td class="iaqi-value">{{ "%.1f"|format(result.iaqi) }}</td>
+                        <td>
+                            <div class="category-cell">
+                                <span>{{ result.emoji }}</span>
+                                <span class="category-badge badge-{{ result.category.lower().replace(' ', '-') }}">{{ result.category }}</span>
+                            </div>
+                        </td>
+                        <td>{{ result.range }}</td>
+                        <td>{{ result.description }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">
+                <i class="fas fa-cloud-upload-alt"></i>
+                Upload New File
+            </a>
+            <a href="{{ url_for('learnmore') }}" class="btn btn-secondary">
+                <i class="fas fa-info-circle"></i>
+                Learn More
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Auto-hide flash messages after 5 seconds
+        setTimeout(function() {
+            const flashMessages = document.querySelector('.flash-messages');
+            if (flashMessages) {
+                flashMessages.style.opacity = '0';
+                setTimeout(() => flashMessages.remove(), 300);
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
